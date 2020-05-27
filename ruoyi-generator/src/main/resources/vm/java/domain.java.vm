@@ -1,0 +1,43 @@
+package ${package}.domain;
+
+import com.ruoyi.common.base.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+#foreach ($column in $columns)
+#if($column.attrType == 'Date' && $column.attrname == "createTime" && $column.attrname == "updateTime")
+import java.util.Date;
+#break
+#end
+#end
+#foreach ($column in $columns)
+    #if($column.attrType == 'BigDecimal')
+    import java.math.BigDecimal;
+        #break
+    #end
+#end
+/**
+ * ${tableComment}表 ${tableName}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@ApiModel(description="${tableComment}",parent=BaseEntity.class)
+public class ${className} extends BaseEntity{
+
+    private static final long serialVersionUID=1L;
+#foreach ($column in $columns)
+    #if( $column.attrname == "searchValue" ||  $column.attrname == "createBy" || $column.attrname == "createTime" ||
+        $column.attrname == "updateBy" || $column.attrname == "updateTime" || $column.attrname == "remark")
+    #else
+
+    @ApiModelProperty(value="$column.columnComment",name="$column.attrname")
+    private $column.attrType $column.attrname;
+    #end
+#end
+
+}
